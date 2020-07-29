@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // constants
-const INITIAL_DATA = {
+const INITIAL_STATE = {
   pokemons: [],
   page: 0,
   error: null,
@@ -15,7 +15,7 @@ const PREVIOUS_POKEMONS_PAGE = 'PREVIOUS_POKEMONS_PAGE';
 const API_URL = 'https://pokeapi.co/api/v2';
 
 // reducer
-export default function reducer(state = INITIAL_DATA, action) {
+export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case GET_POKEMONS_SUCCESS:
       return { ...state, pokemons: action.payload };
