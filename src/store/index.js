@@ -5,7 +5,7 @@ import { logger } from 'redux-logger/src';
 import pokemonsReducer from './ducks/pokemons';
 
 const rootReducer = combineReducers({
-  pokemons: pokemonsReducer,
+  pokemon: pokemonsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
