@@ -3,12 +3,14 @@ import axios from 'axios';
 // constants
 const INITIAL_DATA = {
   pokemons: [],
+  page: 0,
   error: null,
 };
 
 const GET_POKEMONS_SUCCESS = 'GET_POKEMONS_SUCCESS';
-const GET_POKE_NEXT_SUCCESS = 'GET_POKE_NEXT_SUCCESS';
 const GET_POKEMONS_ERROR = 'GET_POKEMONS_ERROR';
+const NEXT_POKEMONS_PAGE = 'NEXT_POKEMONS_PAGE';
+const PREVIOUS_POKEMONS_PAGE = 'PREVIOUS_POKEMONS_PAGE';
 
 const API_URL = 'https://pokeapi.co/api/v2';
 
@@ -19,6 +21,14 @@ export default function reducer(state = INITIAL_DATA, action) {
       return { ...state, pokemons: action.payload };
     case GET_POKEMONS_ERROR:
       return { ...state, error: action.payload };
+    case NEXT_POKEMONS_PAGE:
+      return { ...state, page: state.page + 1 };
+    case PREVIOUS_POKEMONS_PAGE: {
+      // console.log(state.page);
+      // const page = state.page > 0 ? state.page - 1 : state.page;
+      // console.log(page);
+      return { ...state, page: state.page - 1 };
+    }
     default:
       return state;
   }
@@ -32,19 +42,31 @@ export const setApiError = (error) => (dispatch) => {
   });
 };
 
-export const getPokemonsAction = () => async (dispatch, getState) => {
-  try {
-    axios
-      .get(`${API_URL}/pokemon?offset=0&limit=20`)
-      .then((response) => response.data.results)
-      .then((response) =>
-        dispatch({
-          type: GET_POKEMONS_SUCCESS,
-          payload: response,
-        })
-      )
-      .catch((error) => dispatch(setApiError(error)));
-  } catch (error) {
-    dispatch(setApiError(error));
-  }
+export const getPokemons = () => async (dispatch, getState) => {
+  const { page } = getState().pokemon;
+
+  axios
+    .get(`${API_URL}/pokemon?offset=${page}&limit=20`)
+    .then((response) => response.data.results)
+    .then((response) => {
+      dispatch({
+        type: GET_POKEMONS_SUCCESS,
+        payload: response,
+      });
+    })
+    .catch((error) => dispatch(setApiError(error)));
+};
+
+export const getNextPokemonsPage = () => async (dispatch) => {
+  dispatch({
+    type: NEXT_POKEMONS_PAGE,
+  });
+  dispatch(getPokemons());
+};
+
+export const getPreviousPokemonsPage = () => async (dispatch) => {
+  dispatch({
+    type: PREVIOUS_POKEMONS_PAGE,
+  });
+  dispatch(getPokemons());
 };
