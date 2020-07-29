@@ -3,10 +3,12 @@ import axios from 'axios';
 // constants
 const INITIAL_DATA = {
   items: [],
+  error: null,
 };
 
 const GET_POKEMONS_SUCCESS = 'GET_POKEMONS_SUCCESS';
 const GET_POKE_NEXT_SUCCESS = 'GET_POKE_NEXT_SUCCESS';
+const GET_POKEMONS_ERROR = 'GET_POKEMONS_ERROR';
 
 const API_URL = 'https://pokeapi.co/api/v2';
 
@@ -15,12 +17,22 @@ export default function reducer(state = INITIAL_DATA, action) {
   switch (action.type) {
     case GET_POKEMONS_SUCCESS:
       return { ...state, items: action.payload };
+    case GET_POKEMONS_ERROR:
+      return { ...state, error: action.payload };
+
     default:
       return state;
   }
 }
 
 // actions
+export const setApiError = (error) => (dispatch) => {
+  dispatch({
+    type: GET_POKEMONS_ERROR,
+    payload: error,
+  });
+};
+
 export const getPokemonsAction = () => async (dispatch, getState) => {
   console.log(getState());
   try {
@@ -33,8 +45,8 @@ export const getPokemonsAction = () => async (dispatch, getState) => {
           payload: response,
         })
       )
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setApiError(error)));
   } catch (error) {
-    console.log(error);
+    dispatch(setApiError(error));
   }
 };
