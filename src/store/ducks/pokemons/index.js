@@ -33,7 +33,6 @@ export const setApiError = (error) => (dispatch) => {
 };
 
 export const getPokemonsAction = () => async (dispatch, getState) => {
-  console.log(getState());
   try {
     axios
       .get(`${API_URL}/pokemon?offset=0&limit=20`)
