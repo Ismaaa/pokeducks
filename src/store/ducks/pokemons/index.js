@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // constants
 const INITIAL_DATA = {
-  pokemons: [],
+  items: [],
 };
 
 const GET_POKEMONS_SUCCESS = 'GET_POKEMONS_SUCCESS';
@@ -14,9 +14,9 @@ const API_URL = 'https://pokeapi.co/api/v2';
 export default function reducer(state = INITIAL_DATA, action) {
   switch (action.type) {
     case GET_POKEMONS_SUCCESS:
-      return { ...state, pokemons: action.payload };
+      return { ...state, items: action.payload };
     default:
-      throw new Error('Undefined action');
+      return state;
   }
 }
 
